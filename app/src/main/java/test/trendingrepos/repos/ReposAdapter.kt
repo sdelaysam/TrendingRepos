@@ -13,7 +13,7 @@ import test.trendingrepos.databinding.ViewRepoItemBinding
  * @author sdelaysam
  */
 
-class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
+class ReposAdapter(private val onClick: (Int) -> Unit) : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     var repos: List<GithubDto.Repository>? = null
     set(value) {
@@ -25,7 +25,7 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent?.context)
-        return ViewHolder(DataBindingUtil.inflate(inflater, R.layout.view_repo_item, parent, false))
+        return ViewHolder(DataBindingUtil.inflate(inflater, R.layout.view_repo_item, parent, false), onClick)
 
     }
 
@@ -35,7 +35,12 @@ class ReposAdapter : RecyclerView.Adapter<ReposAdapter.ViewHolder>() {
 
     }
 
-    class ViewHolder(val binding: ViewRepoItemBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ViewRepoItemBinding,
+                     private val onClick: (Int) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener { onClick(adapterPosition) }
+        }
+    }
 
     class ItemViewModel(repo: GithubDto.Repository?) {
         val name = repo?.name

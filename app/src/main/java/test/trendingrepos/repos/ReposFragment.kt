@@ -12,6 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import test.trendingrepos.R
+import test.trendingrepos.common.ext.performSegue
+import test.trendingrepos.common.ext.setTitle
+import test.trendingrepos.common.ext.setBackEnabled
 import test.trendingrepos.databinding.FragmentReposBinding
 import javax.inject.Inject
 
@@ -32,11 +35,8 @@ class ReposFragment : DaggerFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReposViewModel::class.java)
-        viewModel.error.observe(this, Observer {
-            message -> message?.let {
-                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
-            }
-        })
+        viewModel.segue.observe(this, Observer { segue -> performSegue(segue) })
+        viewModel.error.observe(this, Observer { message -> showError(message) })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,8 +48,20 @@ class ReposFragment : DaggerFragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        setTitle(null)
+        setBackEnabled(false)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding.recyclerView.adapter = null
+    }
+
+    private fun showError(message: String?) {
+        message?.let {
+            Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+        }
     }
 }

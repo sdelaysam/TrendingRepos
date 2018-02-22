@@ -6,8 +6,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import test.trendingrepos.main.MainActivity
 import test.trendingrepos.common.viewmodel.ViewModelFactory
 import test.trendingrepos.common.viewmodel.ViewModelKey
+import test.trendingrepos.details.DetailsFragment
+import test.trendingrepos.details.DetailsViewModel
+import test.trendingrepos.main.MainViewModel
 import test.trendingrepos.repos.ReposFragment
 import test.trendingrepos.repos.ReposViewModel
 
@@ -20,14 +24,30 @@ import test.trendingrepos.repos.ReposViewModel
 interface UiModule {
 
     @ContributesAndroidInjector
-    fun contributeReposFragment(): ReposFragment
+    fun contributesMainActivity(): MainActivity
+
+    @ContributesAndroidInjector
+    fun contributesReposFragment(): ReposFragment
+
+    @ContributesAndroidInjector
+    fun contributesDetailsFragment(): DetailsFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    fun bindsMainViewModel(viewModel: MainViewModel) : ViewModel
 
     @Binds
     @IntoMap
     @ViewModelKey(ReposViewModel::class)
-    fun bindListUsersViewModel(viewModel: ReposViewModel) : ViewModel
+    fun bindsReposViewModel(viewModel: ReposViewModel) : ViewModel
 
     @Binds
-    fun bindViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
+    @IntoMap
+    @ViewModelKey(DetailsViewModel::class)
+    fun bindsDetailsViewModel(viewModel: DetailsViewModel) : ViewModel
+
+    @Binds
+    fun bindsViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
 
 }

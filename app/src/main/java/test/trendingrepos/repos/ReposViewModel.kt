@@ -10,6 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import test.trendingrepos.OpenForTesting
 import test.trendingrepos.R
 import test.trendingrepos.common.api.GithubDto
+import test.trendingrepos.main.Segue
+import test.trendingrepos.main.SegueType
 import javax.inject.Inject
 
 /**
@@ -24,7 +26,8 @@ class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewMo
     val loading = ObservableBoolean(false)
     var emptyText = ObservableField(R.string.no_repos)
     val error = MutableLiveData<String>()
-    val adapter = ReposAdapter()
+    val segue = MutableLiveData<Segue>()
+    val adapter = ReposAdapter({ idx -> doOnSelection(idx) })
 
     private var requestDisposable = Disposables.disposed()
 
@@ -52,6 +55,11 @@ class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewMo
         emptyText.set(R.string.repos_failed)
         adapter.repos = null
         error.postValue(throwable.message)
+    }
+
+    private fun doOnSelection(index: Int) {
+        model.selectedIdx = index
+        segue.value = Segue(SegueType.OPEN_DETAILS)
     }
 
     override fun onCleared() {

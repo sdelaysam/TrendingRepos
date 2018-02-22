@@ -1,7 +1,6 @@
 package test.trendingrepos.tests
 
 import android.content.Intent
-import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -11,16 +10,13 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import test.trendingrepos.MainActivity
+import test.trendingrepos.main.MainActivity
 import test.trendingrepos.R
 import test.trendingrepos.common.api.GithubDto
 import test.trendingrepos.common.di.TestApiModule
