@@ -1,12 +1,10 @@
 package test.trendingrepos.utils
 
-import android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import android.support.test.espresso.matcher.ViewMatchers.withParent
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 /**
@@ -16,17 +14,16 @@ import org.hamcrest.Matchers.allOf
 
 object ViewMatchers {
 
-    fun toolbarIconIcon(): Matcher<View> {
-        return allOf<View>(
+    fun toolbarIconIcon() = allOf<View>(
                 isAssignableFrom(ImageButton::class.java),
                 withParent(isAssignableFrom(Toolbar::class.java)))
-    }
 
-    fun toolbarTitle(): Matcher<View> {
-        return allOf<View>(
+    fun toolbarTitle() = allOf<View>(
                 isAssignableFrom(TextView::class.java),
                 withParent(isAssignableFrom(Toolbar::class.java)))
-    }
 
+    fun snackbar(message: String) = allOf<View>(
+            withId(android.support.design.R.id.snackbar_text),
+            withText(message))
 }
 

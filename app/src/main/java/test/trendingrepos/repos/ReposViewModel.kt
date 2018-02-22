@@ -1,10 +1,15 @@
 package test.trendingrepos.repos
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean
-import io.reactivex.disposables.CompositeDisposable
+import android.databinding.ObservableField
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import test.trendingrepos.OpenForTesting
+import test.trendingrepos.R
+import test.trendingrepos.common.api.GithubDto
 import javax.inject.Inject
 
 /**
@@ -16,19 +21,41 @@ import javax.inject.Inject
 class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewModel() {
 
     val empty = ObservableBoolean(false)
+    val loading = ObservableBoolean(false)
+    var emptyText = ObservableField(R.string.no_repos)
+    val error = MutableLiveData<String>()
+    val adapter = ReposAdapter()
 
-    private val disposables = CompositeDisposable()
+    private var requestDisposable = Disposables.disposed()
 
-    init {
-        disposables.add(model.getRepos()
-                .subscribeOn(Schedulers.io())
-                .subscribe {
-                    empty.set(it.isEmpty())
-                })
+    init { loadRepos() }
+
+    fun loadRepos() {
+        if (requestDisposable.isDisposed) {
+            requestDisposable = model.getRepos()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { loading.set(true) }
+                    .doAfterTerminate { loading.set(false) }
+                    .subscribe(this::doOnSuccess, this::doOnError)
+        }
+    }
+
+    private fun doOnSuccess(response: List<GithubDto.Repository>) {
+        empty.set(response.isEmpty())
+        emptyText.set(R.string.no_repos)
+        adapter.repos = response
+    }
+
+    private fun doOnError(throwable: Throwable) {
+        empty.set(true)
+        emptyText.set(R.string.repos_failed)
+        adapter.repos = null
+        error.postValue(throwable.message)
     }
 
     override fun onCleared() {
         super.onCleared()
-        disposables.dispose()
+        requestDisposable.dispose()
     }
 }

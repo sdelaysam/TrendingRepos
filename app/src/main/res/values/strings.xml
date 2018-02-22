@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">TrendingRepos</string>
+    <string name="app_name">Trending Repos</string>
     <string name="no_repos">No repos found</string>
+    <string name="repos_failed">Something went wrong\nPlease try again later</string>
 </resources>

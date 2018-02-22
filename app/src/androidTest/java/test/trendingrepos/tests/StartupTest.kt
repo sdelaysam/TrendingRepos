@@ -1,6 +1,7 @@
 package test.trendingrepos.tests
 
 import android.content.Intent
+import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -12,6 +13,7 @@ import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -22,6 +24,8 @@ import test.trendingrepos.MainActivity
 import test.trendingrepos.R
 import test.trendingrepos.common.api.GithubDto
 import test.trendingrepos.common.di.TestApiModule
+import test.trendingrepos.utils.RecyclerViewMatcher.hasItemsCount
+import test.trendingrepos.utils.RecyclerViewMatcher.withRecyclerView
 import test.trendingrepos.utils.ViewMatchers
 import java.util.*
 import kotlin.collections.ArrayList
@@ -53,6 +57,22 @@ class StartupTest {
                 .check(matches(isDisplayed()))
                 .check(matches(withText(R.string.app_name)))
 
+        onView(withId(R.id.recycler_view))
+                .check(matches(isDisplayed()))
+                .check(matches(hasItemsCount(3)))
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(0))
+                .check(matches(hasDescendant(withText("name1"))))
+                .check(matches(hasDescendant(withText("description1"))))
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(1))
+                .check(matches(hasDescendant(withText("name2"))))
+                .check(matches(hasDescendant(withText("description2"))))
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(2))
+                .check(matches(hasDescendant(withText("name3"))))
+                .check(matches(hasDescendant(withText("description3"))))
+
         onView(withId(R.id.empty_text)).check(matches(not(isDisplayed())))
     }
 
@@ -66,7 +86,36 @@ class StartupTest {
                 .check(matches(isDisplayed()))
                 .check(matches(withText(R.string.app_name)))
 
-        onView(withId(R.id.empty_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.recycler_view))
+                .check(matches(isDisplayed()))
+                .check(matches(hasItemsCount(0)))
+
+        onView(withId(R.id.empty_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText(R.string.no_repos)))
+    }
+
+    @Test
+    fun checkListFailed() {
+        val message = "No network"
+        doReturn(getRepositoriesListError(message)).whenever(TestApiModule.githubApi).getRepositories(any(), any(), any())
+        activityRule.launchActivity(Intent())
+
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
+        onView(ViewMatchers.toolbarTitle())
+                .check(matches(isDisplayed()))
+                .check(matches(withText(R.string.app_name)))
+
+        onView(withId(R.id.recycler_view))
+                .check(matches(isDisplayed()))
+                .check(matches(hasItemsCount(0)))
+
+        onView(withId(R.id.empty_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText(R.string.repos_failed)))
+
+        onView(ViewMatchers.snackbar(message))
+                .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     private fun getEmptyRepositoriesList() = Single.defer {
@@ -79,6 +128,10 @@ class StartupTest {
         list.add(GithubDto.Repository(2, "name2", "fullName2", getOwner(), false, "", "description2", false, "", Date(), Date(), Date(), "", 200, 2, 2, "", 2, 2, "", "", 20.0))
         list.add(GithubDto.Repository(3, "name3", "fullName3", getOwner(), false, "", "description3", false, "", Date(), Date(), Date(), "", 300, 3, 3, "", 3, 3, "", "", 30.0))
         Single.just(GithubDto.ListResponse(list.size, true, list))
+    }
+
+    private fun getRepositoriesListError(message: String) = Single.defer {
+        Single.error<GithubDto.ListResponse<GithubDto.Repository>>(Throwable(message))
     }
 
     private fun getOwner() = GithubDto.User("owner", 1L, "", "");
