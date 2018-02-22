@@ -18,6 +18,9 @@ import javax.inject.Singleton
 
 
 /**
+ * Dagger dependency module responsible for grabbing data from Github API.
+ * @see <a href="https://google.github.io/dagger/">Dagger documentation</a>
+ *
  * Created on 22/02/2018
  * @author sdelaysam
  */

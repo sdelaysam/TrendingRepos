@@ -16,6 +16,10 @@ import test.trendingrepos.repos.ReposFragment
 import test.trendingrepos.repos.ReposViewModel
 
 /**
+ * Dagger dependency module responsible for representation layer dependencies.
+ * @see <a href="https://google.github.io/dagger/">Dagger documentation</a>
+ * @see <a href="https://developer.android.com/topic/libraries/architecture/index.html">Android architecture components</a>
+ *
  * Created on 22/02/2018
  * @author sdelaysam
  */

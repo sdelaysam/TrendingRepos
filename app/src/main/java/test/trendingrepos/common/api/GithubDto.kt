@@ -6,6 +6,8 @@ import java.util.*
 
 
 /**
+ * Data transfer objects specific to Github API
+ * 
  * Created on 22/02/2018
  * @author sdelaysam
  */

@@ -5,6 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
+ * Github API v3
+ * Refer to <a href="https://developer.github.com/v3/">Github documentation</a>
+ *
  * Created on 22/02/2018
  * @author sdelaysam
  */

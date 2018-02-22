@@ -8,7 +8,9 @@ import javax.inject.Singleton
 
 
 /**
- * https://medium.com/@alexfacciorusso/understanding-dagger-2-multibindings-viewmodel-8418eb372848
+ * Factory providing {@link android.arch.lifecycle.ViewModel} based on dependency graph
+ * @see <a href="https://medium.com/@alexfacciorusso/understanding-dagger-2-multibindings-viewmodel-8418eb372848">this article</a>
+ *
  * Created on 22/02/2018
  * @author sdelaysam
  */

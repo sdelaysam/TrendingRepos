@@ -7,6 +7,9 @@ import test.trendingrepos.repos.ReposModel
 import javax.inject.Singleton
 
 /**
+ * Dagger dependency module providing application's models.
+ * @see <a href="https://google.github.io/dagger/">Dagger documentation</a>
+ *
  * Created on 22/02/2018
  * @author sdelaysam
  */
