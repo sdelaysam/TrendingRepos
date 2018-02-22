@@ -3,6 +3,9 @@ package test.trendingrepos
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import test.trendingrepos.common.di.DataModule
+import test.trendingrepos.common.di.TestApiModule
+import test.trendingrepos.common.di.UiModule
 import javax.inject.Singleton
 
 /**
@@ -17,7 +20,10 @@ class UiTestApp : App() {
 
 @Singleton
 @Component(modules = [
-    AndroidSupportInjectionModule::class
+    AndroidSupportInjectionModule::class,
+    TestApiModule::class,
+    DataModule::class,
+    UiModule::class
 ])
 interface TestAppComponent : AndroidInjector<UiTestApp> {
 

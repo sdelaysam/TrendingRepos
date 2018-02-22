@@ -4,6 +4,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "kotlin-allopen"
 
+ext.props = new Properties()
+file("dev.properties").withInputStream { props.load(it) }
+
 android {
     compileSdkVersion compileSdk
     buildToolsVersion buildTools
@@ -17,6 +20,9 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "test.trendingrepos.UiTestRunner"
         generatedDensities = [] // https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
+
+        buildConfigField 'String', 'GITHUB_API', "\"${props['github.api']}\""
+        buildConfigField 'String', 'HTTP_LOGGER_LEVEL', "\"${props['http.logger.level']}\""
     }
     aaptOptions {
         additionalParameters "--no-version-vectors" // https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
@@ -57,6 +63,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
     kapt "com.android.databinding:compiler:$dataBindingVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -65,7 +72,12 @@ dependencies {
     kaptAndroidTest "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
+
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
+    androidTestImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
+
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: "com.android.support", module: "support-annotations"
     }

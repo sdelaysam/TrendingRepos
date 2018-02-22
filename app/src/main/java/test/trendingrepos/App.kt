@@ -4,6 +4,9 @@ import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import dagger.android.support.DaggerApplication
+import test.trendingrepos.common.di.ApiModule
+import test.trendingrepos.common.di.DataModule
+import test.trendingrepos.common.di.UiModule
 import javax.inject.Singleton
 
 /**
@@ -19,7 +22,10 @@ class App : DaggerApplication() {
 
 @Singleton
 @Component(modules = [
-    AndroidSupportInjectionModule::class
+    AndroidSupportInjectionModule::class,
+    ApiModule::class,
+    DataModule::class,
+    UiModule::class
 ])
 interface AppComponent : AndroidInjector<App> {
 

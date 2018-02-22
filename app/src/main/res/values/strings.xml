@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TrendingRepos</string>
+    <string name="no_repos">No repos found</string>
 </resources>
