@@ -29,21 +29,35 @@
             android:layout_marginBottom="4dp"
             android:textSize="16sp"
             android:text="@{viewModel.name}"
-            tools:text="Acceptance rate"/>
+            tools:text="Repo name"/>
+
+        <ImageView
+            android:id="@+id/star_icon"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_star_black_24px"
+            android:tint="@android:color/darker_gray"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/score_text"
+            app:layout_constraintEnd_toEndOf="@id/score_text"
+            app:layout_constraintStart_toStartOf="@id/score_text"
+            app:layout_constraintVertical_chainStyle="packed"/>
 
         <TextView
             android:id="@+id/score_text"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:gravity="center"
             android:layout_marginEnd="20dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/star_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/name_text"
-            android:textSize="20sp"
-            android:text="@{viewModel.score}"
-            tools:text="99%"/>
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="12sp"
+            android:text="@{viewModel.stars}"
+            tools:text="1,234 stars"/>
 
         <TextView
             android:id="@+id/description_text"
@@ -56,7 +70,7 @@
             android:textSize="12sp"
             android:maxLines="2"
             android:text="@{viewModel.description}"
-            tools:text="99 out of 100 dispatches" />
+            tools:text="Repo description" />
 
         <View
             android:layout_width="0dp"

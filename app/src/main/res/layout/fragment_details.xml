@@ -19,6 +19,7 @@
             android:layout_margin="16dp">
 
             <TextView
+                android:id="@+id/title_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TitleText"
@@ -27,6 +28,7 @@
                 tools:text="Full name"/>
 
             <TextView
+                android:id="@+id/description_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DescriptionText"

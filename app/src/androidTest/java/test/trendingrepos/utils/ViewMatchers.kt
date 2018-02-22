@@ -14,7 +14,7 @@ import org.hamcrest.Matchers.allOf
 
 object ViewMatchers {
 
-    fun toolbarIconIcon() = allOf<View>(
+    fun toolbarIcon() = allOf<View>(
                 isAssignableFrom(ImageButton::class.java),
                 withParent(isAssignableFrom(Toolbar::class.java)))
 

@@ -15,9 +15,9 @@ import javax.inject.Inject
 @OpenForTesting
 class ReposModel @Inject constructor(private val api: GithubApi) {
 
-    private var items: List<GithubDto.Repository>? = null
-
     var selectedIdx: Int? = null // TODO: persist selected index
+
+    private var items: List<GithubDto.Repository>? = null
 
     fun getSelectedRepo() : GithubDto.Repository? {
         return lets(selectedIdx, items) { idx, items -> items[idx] }
@@ -31,7 +31,6 @@ class ReposModel @Inject constructor(private val api: GithubApi) {
         return api.getRepositories(GithubDto.RepoQuery("android"), GithubDto.SortType.STARS, GithubDto.SortOrder.DESC)
                 .map { it.items }
                 .doOnSuccess { items = it }
-                .doOnError { items = null }
                 .toObservable()
     }
 }

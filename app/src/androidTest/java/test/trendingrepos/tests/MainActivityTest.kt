@@ -2,6 +2,7 @@ package test.trendingrepos.tests
 
 import android.content.Intent
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
@@ -32,7 +33,7 @@ import kotlin.collections.ArrayList
  */
 
 @RunWith(AndroidJUnit4::class)
-class StartupTest {
+class MainActivityTest {
 
     @Rule
     @JvmField
@@ -112,6 +113,60 @@ class StartupTest {
 
         onView(ViewMatchers.snackbar(message))
                 .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun checkNavigation() {
+        doReturn(getRepositoriesList()).whenever(TestApiModule.githubApi).getRepositories(any(), any(), any())
+        activityRule.launchActivity(Intent())
+
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()))
+        onView(ViewMatchers.toolbarTitle())
+                .check(matches(isDisplayed()))
+                .check(matches(withText(R.string.app_name)))
+
+        onView(withId(R.id.recycler_view))
+                .check(matches(isDisplayed()))
+                .check(matches(hasItemsCount(3)))
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(0))
+                .check(matches(hasDescendant(withText("name1"))))
+                .check(matches(hasDescendant(withText("description1"))))
+                .perform(click())
+
+        onView(ViewMatchers.toolbarTitle())
+                .check(matches(isDisplayed()))
+                .check(matches(withText("name1")))
+
+        onView(withId(R.id.title_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText("fullName1")))
+
+        onView(withId(R.id.description_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText("description1")))
+
+        onView(ViewMatchers.toolbarIcon())
+                .check(matches(isDisplayed()))
+                .perform(click())
+
+        onView(ViewMatchers.toolbarTitle())
+                .check(matches(isDisplayed()))
+                .check(matches(withText(R.string.app_name)))
+
+        onView(withRecyclerView(R.id.recycler_view).atPosition(1))
+                .check(matches(hasDescendant(withText("name2"))))
+                .check(matches(hasDescendant(withText("description2"))))
+                .perform(click())
+
+        onView(withId(R.id.title_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText("fullName2")))
+
+        onView(withId(R.id.description_text))
+                .check(matches(isDisplayed()))
+                .check(matches(withText("description2")))
+
     }
 
     private fun getEmptyRepositoriesList() = Single.defer {

@@ -51,9 +51,10 @@ class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewMo
     }
 
     private fun doOnError(throwable: Throwable) {
-        empty.set(true)
-        emptyText.set(R.string.repos_failed)
-        adapter.repos = null
+        if (adapter.itemCount == 0) {
+            empty.set(true)
+            emptyText.set(R.string.repos_failed)
+        }
         error.postValue(throwable.message)
     }
 

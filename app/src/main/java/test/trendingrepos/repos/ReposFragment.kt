@@ -62,6 +62,7 @@ class ReposFragment : DaggerFragment() {
     private fun showError(message: String?) {
         message?.let {
             Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+            viewModel.error.value = null
         }
     }
 }

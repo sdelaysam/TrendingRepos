@@ -1,12 +1,15 @@
 package test.trendingrepos.repos
 
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableField
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import test.trendingrepos.R
 import test.trendingrepos.common.api.GithubDto
 import test.trendingrepos.databinding.ViewRepoItemBinding
+import java.text.NumberFormat
+import java.util.*
 
 /**
  * Created on 22/02/2018
@@ -30,9 +33,13 @@ class ReposAdapter(private val onClick: (Int) -> Unit) : RecyclerView.Adapter<Re
     }
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-        holder?.binding?.viewModel = ItemViewModel(repos?.get(position))
+        holder?.binding?.let {
+            if (it.viewModel == null) {
+                it.viewModel = ItemViewModel()
+            }
+            it.viewModel?.repo = repos?.get(position)
+        }
         holder?.binding?.executePendingBindings()
-
     }
 
     class ViewHolder(val binding: ViewRepoItemBinding,
@@ -42,10 +49,17 @@ class ReposAdapter(private val onClick: (Int) -> Unit) : RecyclerView.Adapter<Re
         }
     }
 
-    class ItemViewModel(repo: GithubDto.Repository?) {
-        val name = repo?.name
-        val description = repo?.description
-        val score = repo?.score.toString()
+    class ItemViewModel {
+        val name = ObservableField("")
+        val description = ObservableField("")
+        val stars = ObservableField("")
+
+        var repo: GithubDto.Repository? = null
+        set(value) {
+            name.set(value?.name ?: "")
+            description.set(value?.description ?: "")
+            stars.set(NumberFormat.getNumberInstance(Locale.US).format(value?.stargazersCount ?: 0))
+        }
     }
 
 }
