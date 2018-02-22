@@ -11,21 +11,20 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Single
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import test.trendingrepos.main.MainActivity
 import test.trendingrepos.R
-import test.trendingrepos.common.api.GithubDto
 import test.trendingrepos.common.di.TestApiModule
+import test.trendingrepos.main.MainActivity
+import test.trendingrepos.stubs.getEmptyRepositoriesList
+import test.trendingrepos.stubs.getRepositoriesList
+import test.trendingrepos.stubs.getRepositoriesListError
 import test.trendingrepos.utils.RecyclerViewMatcher.hasItemsCount
 import test.trendingrepos.utils.RecyclerViewMatcher.withRecyclerView
 import test.trendingrepos.utils.ViewMatchers
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created on 22/02/2018
@@ -168,22 +167,4 @@ class MainActivityTest {
                 .check(matches(withText("description2")))
 
     }
-
-    private fun getEmptyRepositoriesList() = Single.defer {
-        Single.just(GithubDto.ListResponse<GithubDto.Repository>(0, true, Collections.emptyList()))
-    }
-
-    private fun getRepositoriesList() = Single.defer {
-        val list = ArrayList<GithubDto.Repository>()
-        list.add(GithubDto.Repository(1, "name1", "fullName1", getOwner(), false, "", "description1", false, "", Date(), Date(), Date(), "", 100, 1, 1, "", 1, 1, "", "", 10.0))
-        list.add(GithubDto.Repository(2, "name2", "fullName2", getOwner(), false, "", "description2", false, "", Date(), Date(), Date(), "", 200, 2, 2, "", 2, 2, "", "", 20.0))
-        list.add(GithubDto.Repository(3, "name3", "fullName3", getOwner(), false, "", "description3", false, "", Date(), Date(), Date(), "", 300, 3, 3, "", 3, 3, "", "", 30.0))
-        Single.just(GithubDto.ListResponse(list.size, true, list))
-    }
-
-    private fun getRepositoriesListError(message: String) = Single.defer {
-        Single.error<GithubDto.ListResponse<GithubDto.Repository>>(Throwable(message))
-    }
-
-    private fun getOwner() = GithubDto.User("owner", 1L, "", "");
 }

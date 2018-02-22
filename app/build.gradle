@@ -19,13 +19,13 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "test.trendingrepos.UiTestRunner"
-        generatedDensities = [] // https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
+        generatedDensities = []
 
         buildConfigField 'String', 'GITHUB_API', "\"${props['github.api']}\""
         buildConfigField 'String', 'HTTP_LOGGER_LEVEL', "\"${props['http.logger.level']}\""
     }
     aaptOptions {
-        additionalParameters "--no-version-vectors" // https://medium.com/@chrisbanes/appcompat-v23-2-age-of-the-vectors-91cbafa87c88
+        additionalParameters "--no-version-vectors"
     }
     dataBinding {
         enabled = true
@@ -38,6 +38,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test/java"
     }
 }
 
@@ -73,6 +76,7 @@ dependencies {
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion"
+    testImplementation "android.arch.core:core-testing:$androidArchVersion"
 
     androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"

@@ -70,12 +70,11 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun showReposFragment() {
-        var fragment = supportFragmentManager.findFragmentById(R.id.container)
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragment == null) {
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.container, ReposFragment())
-                    .addToBackStack(null)
                     .commit()
         }
     }
