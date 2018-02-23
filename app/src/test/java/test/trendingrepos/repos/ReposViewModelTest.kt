@@ -1,16 +1,13 @@
 package test.trendingrepos.repos
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
-import test.trendingrepos.stubs.getRepositoriesList
 import test.trendingrepos.stubs.getRepositoriesListError
 import test.trendingrepos.stubs.getRepositoriesListObservable
 import test.trendingrepos.utils.ImmediateSchedulersRule

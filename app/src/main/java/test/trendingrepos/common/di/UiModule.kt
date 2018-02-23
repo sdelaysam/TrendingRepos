@@ -6,11 +6,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import test.trendingrepos.main.MainActivity
 import test.trendingrepos.common.viewmodel.ViewModelFactory
 import test.trendingrepos.common.viewmodel.ViewModelKey
 import test.trendingrepos.details.DetailsFragment
 import test.trendingrepos.details.DetailsViewModel
+import test.trendingrepos.main.MainActivity
 import test.trendingrepos.main.MainViewModel
 import test.trendingrepos.repos.ReposFragment
 import test.trendingrepos.repos.ReposViewModel

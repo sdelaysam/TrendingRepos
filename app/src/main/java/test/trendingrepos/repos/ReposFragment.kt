@@ -44,7 +44,7 @@ class ReposFragment : DaggerFragment() {
         binding.viewModel = viewModel
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.adapter = viewModel.adapter
-        binding.refreshControl.setOnRefreshListener(viewModel::loadRepos)
+        binding.refreshControl.setOnRefreshListener { viewModel.loadRepos(true) }
         return binding.root
     }
 

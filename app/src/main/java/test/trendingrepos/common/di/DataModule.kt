@@ -3,6 +3,7 @@ package test.trendingrepos.common.di
 import dagger.Module
 import dagger.Provides
 import test.trendingrepos.common.api.GithubApi
+import test.trendingrepos.common.model.SessionModel
 import test.trendingrepos.repos.ReposModel
 import javax.inject.Singleton
 
@@ -19,6 +20,10 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun providesReposModel(api: GithubApi) = ReposModel(api)
+    fun providesReposModel(api: GithubApi, sessionModel: SessionModel) = ReposModel(api, sessionModel)
+
+    @Provides
+    @Singleton
+    fun providesSessionModel() = SessionModel()
 
 }

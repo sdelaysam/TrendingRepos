@@ -1,11 +1,7 @@
 package test.trendingrepos.utils.repos
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import io.reactivex.observers.TestObserver
-import io.reactivex.subscribers.TestSubscriber
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Rule
@@ -14,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import test.trendingrepos.common.api.GithubApi
 import test.trendingrepos.common.api.GithubDto
+import test.trendingrepos.common.model.SessionModel
 import test.trendingrepos.repos.ReposModel
 import test.trendingrepos.stubs.getRepositoriesList
 import test.trendingrepos.stubs.getRepositoriesListError
@@ -37,10 +34,13 @@ class ReposModelTest {
     @Mock
     lateinit var api: GithubApi
 
+    @Mock
+    lateinit var session: SessionModel
+
     @Test
     fun getRepos() {
         doReturn(getRepositoriesList()).whenever(api).getRepositories(any(), any(), any())
-        val model = ReposModel(api)
+        val model = ReposModel(api, session)
         val observer = TestObserver<List<GithubDto.Repository>>()
         model.getRepos().subscribe(observer)
 
@@ -52,21 +52,26 @@ class ReposModelTest {
     @Test
     fun keepSelectionAfterError() {
         doReturn(getRepositoriesList()).whenever(api).getRepositories(any(), any(), any())
-        val model = ReposModel(api)
+        doReturn(1L).whenever(session).getLong(any())
+
+        val model = ReposModel(api, session)
         val observer = TestObserver<List<GithubDto.Repository>>()
         model.getRepos().subscribe(observer)
 
-        model.selectedIdx = 0
+        model.setSelectedId(1)
+        verify(session).putLong(any(), eq(1))
+
         assertNotNull(model.getSelectedRepo())
-        assertEquals("name1", model.getSelectedRepo()!!.name)
+        assertEquals("name1", model.getSelectedRepo().blockingFirst().toNullable()!!.name)
 
         doReturn(getRepositoriesListError("any")).whenever(api).getRepositories(any(), any(), any())
         val observer2 = TestObserver<List<GithubDto.Repository>>()
-        model.getRepos().subscribe(observer2)
+        model.getRepos(true).subscribe(observer2)
         observer2.assertError { it.message == "any" }
 
+        verify(session, never()).remove(any())
         assertNotNull(model.getSelectedRepo())
-        assertEquals("name1", model.getSelectedRepo()!!.name)
+        assertEquals("name1", model.getSelectedRepo().blockingFirst().toNullable()!!.name)
     }
 
 }

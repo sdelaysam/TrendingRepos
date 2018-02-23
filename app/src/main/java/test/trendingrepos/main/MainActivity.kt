@@ -5,8 +5,12 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
 import test.trendingrepos.R
+import test.trendingrepos.common.model.SessionModel
 import test.trendingrepos.databinding.ActivityMainBinding
 import test.trendingrepos.details.DetailsFragment
 import test.trendingrepos.repos.ReposFragment
@@ -17,16 +21,24 @@ import javax.inject.Inject
  * @author sdelaysam
  */
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var sessionModel: SessionModel
 
     private lateinit var viewModel: MainViewModel
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Restore session in first place
+        // before fragments get restored
+        AndroidInjection.inject(this)
+        sessionModel.restore(savedInstanceState)
+
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(binding.toolbar)
@@ -38,6 +50,11 @@ class MainActivity : DaggerAppCompatActivity() {
         viewModel.backEnabled.observe(this, Observer { showBack -> doOnBackEnabled(showBack) })
 
         doOnSegue(Segue(SegueType.SHOW_REPOS))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        sessionModel.save(outState)
     }
 
     private fun doOnTitle(title: String?) {

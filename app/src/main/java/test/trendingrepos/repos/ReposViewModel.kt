@@ -6,7 +6,6 @@ import android.databinding.ObservableBoolean
 import android.databinding.ObservableField
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposables
-import io.reactivex.schedulers.Schedulers
 import test.trendingrepos.OpenForTesting
 import test.trendingrepos.R
 import test.trendingrepos.common.api.GithubDto
@@ -33,10 +32,9 @@ class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewMo
 
     init { loadRepos() }
 
-    fun loadRepos() {
+    fun loadRepos(forceUpdate: Boolean = false) {
         if (requestDisposable.isDisposed) {
-            requestDisposable = model.getRepos()
-                    .subscribeOn(Schedulers.io())
+            requestDisposable = model.getRepos(forceUpdate)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe { loading.set(true) }
                     .doAfterTerminate { loading.set(false) }
@@ -59,7 +57,7 @@ class ReposViewModel @Inject constructor(private val model: ReposModel) : ViewMo
     }
 
     private fun doOnSelection(index: Int) {
-        model.selectedIdx = index
+        model.setSelectedId(adapter.repos?.get(index)?.id)
         segue.value = Segue(SegueType.OPEN_DETAILS)
     }
 

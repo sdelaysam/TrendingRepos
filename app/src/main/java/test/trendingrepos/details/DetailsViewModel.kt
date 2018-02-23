@@ -3,6 +3,10 @@ package test.trendingrepos.details
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
+import com.gojuno.koptional.Optional
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposables
+import test.trendingrepos.common.api.GithubDto
 import test.trendingrepos.main.Segue
 import test.trendingrepos.main.SegueType
 import test.trendingrepos.repos.ReposModel
@@ -23,12 +27,20 @@ class DetailsViewModel @Inject constructor(private val model: ReposModel) : View
 
     val description = ObservableField("")
 
+    private var disposable = Disposables.empty()
+
     init {
-        val repo = model.getSelectedRepo()
-        if (repo != null) {
-            title.value = repo.name
-            fullName.set(repo.fullName)
-            description.set(repo.description)
+        disposable = model.getSelectedRepo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::doOnRepo)
+    }
+
+    private fun doOnRepo(repo: Optional<GithubDto.Repository>) {
+        val r = repo.toNullable()
+        if (r != null) {
+            title.value = r.name
+            fullName.set(r.fullName)
+            description.set(r.description)
         } else {
             // selected index is not persisted so process restart will invalidate data in model
             // should be fixed in real-life app :)
@@ -38,7 +50,8 @@ class DetailsViewModel @Inject constructor(private val model: ReposModel) : View
 
     override fun onCleared() {
         super.onCleared()
-        model.selectedIdx = null
+        model.setSelectedId(null)
+        disposable.dispose()
     }
 
 }
