@@ -51,7 +51,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "android.arch.lifecycle:extensions:$androidArchVersion"
     implementation "android.arch.lifecycle:common-java8:$androidArchVersion"
     implementation "android.arch.lifecycle:reactivestreams:$androidArchVersion"

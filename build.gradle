@@ -7,7 +7,6 @@ buildscript {
     ext.dataBindingVersion = '3.0.1'
     ext.supportLibVersion = '27.0.2'
     ext.androidArchVersion = '1.1.0'
-    ext.constraintLayoutVersion = '1.1.0-beta5'
     ext.retrofitVersion = '2.3.0'
     ext.okHttpVersion = '3.9.1'
     ext.rxJavaVersion = '2.1.7'
